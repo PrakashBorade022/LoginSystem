@@ -5,6 +5,9 @@ from .models import User
 class LoginAndRegister():
     def welcome(request):
         return render(request,'welcome.html')
+    def login(request):
+        
+        return render(request,'login.html')    
     def register(request):
         
         if request.method =="POST":
@@ -15,7 +18,16 @@ class LoginAndRegister():
             user.email = request.POST['email']
             user.password = request.POST['password']
             user.repassword = request.POST['repassword']
-            user.save()
+            if user.password!=user.repassword:
+                messages.info(request,"Passwords not match")
+                return redirect('register')  
+            elif user.fname=="" or user.lname=="" or user.email=="" or user.password =="" or user.repassword=="":
+                messages.info(request,"Some fields are missing")
+                return redirect('register')    
+            else:
+                messages.info(request,"registration is done go to login")
+                user.save()
+            
             return render(request,'registration.html')    
         else:
             return render(request,'registration.html')    

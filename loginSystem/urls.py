@@ -20,5 +20,6 @@ from loginApp import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('',views.LoginAndRegister.welcome),
+    path('login',views.LoginAndRegister.login,name="login"),
     path('register',views.LoginAndRegister.register,name="register")
 ]
