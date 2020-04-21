@@ -2,11 +2,44 @@ from django.shortcuts import render,redirect
 from django.contrib import messages
 from .forms import UserModelForm
 from .models import User
+from django.db import connections
+import mysql.connector
+from operator import itemgetter
 class LoginAndRegister():
     def welcome(request):
         return render(request,'welcome.html')
     def login(request):
-        
+        con = mysql.connector.connect(host="localhost",user="root",passwd="9120",database="loginSystem")
+        cursor = con.cursor()
+        con2 = mysql.connector.connect(host="localhost",user="root",passwd="9120",database="loginSystem")
+        cursor2 = con2.cursor()
+        sqlcommand = "select email from loginapp_user"
+        sqlcommand2 = "select password from loginapp_user"
+        cursor.execute(sqlcommand)
+        cursor2.execute(sqlcommand2)
+        e=[]
+        p=[]
+       
+        for i in cursor:
+            e.append(i)
+        for j in cursor2:
+            p.append(j)
+        res = list(map(itemgetter(0), e))
+        res2 = list(map(itemgetter(0), p))    
+        print(res,res2)
+        if request.method =="POST":
+            email = request.POST['email']
+            password = request.POST['password']
+            k=len(res)
+            i=1
+            while i <k:
+                if res[i]==email and res2[i]==password:
+                   print("Authencicated")
+                   break
+                i+=1
+            else:
+                print("Check User or password")
+
         return render(request,'login.html')    
     def register(request):
         
