@@ -6,8 +6,7 @@ from django.db import connections
 import mysql.connector
 from operator import itemgetter
 class LoginAndRegister():
-    def welcome(request):
-        return render(request,'welcome.html')
+    
     def login(request):
         con = mysql.connector.connect(host="localhost",user="root",passwd="9120",database="loginSystem")
         cursor = con.cursor()
@@ -26,21 +25,33 @@ class LoginAndRegister():
             p.append(j)
         res = list(map(itemgetter(0), e))
         res2 = list(map(itemgetter(0), p))    
-        print(res,res2)
+        con3 = mysql.connector.connect(host="localhost",user="root",passwd="9120",database="loginSystem")
+        cursor3 = con2.cursor()
+
         if request.method =="POST":
             email = request.POST['email']
             password = request.POST['password']
             k=len(res)
             i=1
+            sqlcommand3 = "select fname from loginapp_user where email = email"
+            cursor3.execute(sqlcommand3)
+            lst =[]
+            for name in cursor3:
+                name = name
+                name2 =''.join(name)
+            print(name2)
             while i <k:
                 if res[i]==email and res2[i]==password:
-                   print("Authencicated")
+                   return render(request,'welcome.html',{'name':name2})
                    break
                 i+=1
             else:
-                print("Check User or password")
+                messages.info(request,"Check userName or password")
+                return redirect('login')
 
-        return render(request,'login.html')    
+        return render(request,'login.html')   
+    def welcome(request):
+        return render(request,'welcome.html')     
     def register(request):
         
         if request.method =="POST":

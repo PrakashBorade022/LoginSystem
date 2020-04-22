@@ -42,7 +42,9 @@
         
         <button type="submit" class="btn btn-primary">Login</button>
       </form>
-      
+      {% for message in messages%}
+         <h2>{{message}}</h2>
+      {%endfor%}   
      
 </body>
 </html>
